@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@drawable/round"
+    android:backgroundTint="@color/cardview_dark_background"
+    android:padding="@dimen/icon"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:id="@+id/p1"
+        android:layout_marginTop="0dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:layout_width="@dimen/icon"
+            android:layout_height="@dimen/icon"
+            android:background="@drawable/flag_full"
+            android:backgroundTint="@color/red"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/icon"
+            android:text="Priorità 1"
+            android:textColor="@color/white"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:paddingStart="50dp"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/p2"
+        android:layout_marginTop="50dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:layout_width="@dimen/icon"
+            android:layout_height="@dimen/icon"
+            android:background="@drawable/flag_full"
+            android:backgroundTint="@color/colorAccent"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/icon"
+            android:text="Priorità 2"
+            android:textColor="@color/white"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:paddingStart="50dp"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/p3"
+        android:layout_marginTop="100dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:layout_width="@dimen/icon"
+            android:layout_height="@dimen/icon"
+            android:background="@drawable/flag_full"
+            android:backgroundTint="@color/timestamp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/icon"
+            android:text="Priorità 3"
+            android:textColor="@color/white"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:paddingStart="50dp"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/p4"
+        android:layout_marginTop="150dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:layout_width="@dimen/icon"
+            android:layout_height="@dimen/icon"
+            android:background="@drawable/flag"
+            android:backgroundTint="@color/teal_700"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/icon"
+            android:text="Priorità 4"
+            android:textColor="@color/white"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:paddingStart="50dp"/>
+    </RelativeLayout>
+</RelativeLayout>

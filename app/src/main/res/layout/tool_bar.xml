@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:background="@android:color/transparent"> <!-- "@android:color/transparent" -->
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:orientation="vertical">
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1px"
+            android:background="@color/colorPrimaryDark"/>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="49dip"
+            android:padding="3dip"
+            android:paddingBottom="0dip"
+            android:gravity="center_vertical"
+            android:background="@android:color/transparent"
+            android:orientation="horizontal">
+
+            <!-- View Type -->
+            <TextView
+                android:id="@+id/view_type"
+                android:layout_width="wrap_content"
+                android:layout_height="39dip"
+                android:layout_marginRight="8dip"
+                android:layout_marginLeft="5dip"
+                android:layout_marginBottom="2dip"
+                android:layout_marginTop="2dip"
+                android:text="Upcoming"
+                android:gravity="center_vertical"
+                android:layout_weight="100"
+                android:paddingLeft="5dip"
+                android:background="@android:color/transparent"
+                android:textColor="@color/white"
+                android:textSize="20sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/taskListQuickaddControlsContainer"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="5dip"
+            android:background="#22000000"
+            android:visibility="gone">
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="1px"
+                android:background="@drawable/round_background"/>
+
+            <LinearLayout
+                android:id="@+id/taskListQuickaddControls"
+                android:layout_width="fill_parent"
+                android:layout_height="50dip"
+                android:orientation="horizontal">
+
+                <View
+                    android:layout_height="fill_parent"
+                    android:layout_width="1px"
+                    android:background="@color/cardview_light_background"/>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+</RelativeLayout>

@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@drawable/round"
+    android:backgroundTint="@color/cardview_dark_background"
+    android:paddingTop="24dp"
+    android:paddingBottom="28dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <EditText
+        android:id="@+id/editTextTextMultiLine"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:ems="10"
+        android:gravity="start|top"
+        android:windowSoftInputMode="adjustResize|stateHidden"
+        android:hint="Inserisci una task..."
+        android:inputType="textMultiLine"
+        android:maxLines="4"
+        android:scrollbars="vertical"
+        android:textColor="@color/white"
+        android:textColorHint="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/btnDateTimePicker"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_weight="1"
+        android:background="@drawable/border"
+        android:text="Oggi"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:textColor="@color/green"
+        app:backgroundTint="@color/teal_700"
+        app:layout_constraintStart_toStartOf="parent"
+        android:drawableLeft="@drawable/drawable_left_date"
+        android:drawableTint="@color/green"
+        app:layout_constraintTop_toBottomOf="@+id/editTextTextMultiLine" />
+
+    <Button
+        android:id="@+id/btnProjectSelector"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_weight="1"
+        android:background="@drawable/border"
+        android:text="Inbox"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:textColor="@color/white"
+        app:backgroundTint="@color/teal_700"
+        app:layout_constraintStart_toEndOf="@+id/btnDateTimePicker"
+        android:drawableLeft="@drawable/drawable_left_project"
+        android:drawableTint="@color/colorPrimary"
+        app:layout_constraintTop_toBottomOf="@+id/editTextTextMultiLine" />
+
+    <ImageButton
+        android:id="@+id/priority"
+        android:layout_width="28dp"
+        android:layout_height="28dp"
+        android:layout_marginStart="16dp"
+        android:background="@drawable/flag"
+        app:layout_constraintBottom_toBottomOf="@+id/btnProjectSelector"
+        app:layout_constraintStart_toEndOf="@+id/btnProjectSelector"
+        app:layout_constraintTop_toTopOf="@+id/btnProjectSelector" />
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/priority"
+        app:layout_constraintEnd_toEndOf="@+id/editTextTextMultiLine"
+        app:layout_constraintTop_toTopOf="@+id/priority">
+
+        <ImageView
+            android:id="@+id/send_bg"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_centerInParent="true"
+            app:srcCompat="@drawable/round_background"
+            app:tint="@android:color/transparent"/>
+
+        <ImageButton
+            android:id="@+id/send"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_alignEnd="@id/send_bg"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="2dp"
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/send" />
+    </RelativeLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

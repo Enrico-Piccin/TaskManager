@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@android:color/transparent"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/selectProject"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="54dp">
+
+        <ImageView
+            android:id="@+id/projectColor"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:padding="13dp"
+            android:src="@drawable/round_background"
+            app:layout_constraintBottom_toBottomOf="@id/selectProject"
+            app:layout_constraintStart_toStartOf="@id/selectProject"
+            app:layout_constraintTop_toTopOf="@id/selectProject" />
+
+        <TextView
+            android:id="@+id/projectName"
+            android:layout_width="wrap_content"
+            android:layout_height="44dp"
+            android:layout_marginStart="40dp"
+            android:padding="8dp"
+            android:text="Italiano"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            app:layout_constraintBottom_toBottomOf="@id/selectProject"
+            app:layout_constraintStart_toEndOf="@id/projectImage"
+            app:layout_constraintTop_toTopOf="@id/selectProject" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/projectFavorite"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingEnd="10dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <ImageView
+            android:id="@+id/favorite"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:padding="12dp"
+            android:src="@drawable/no_heart"
+            app:layout_constraintBottom_toBottomOf="projectFavorite"
+            app:layout_constraintEnd_toEndOf="projectFavorite"
+            app:layout_constraintTop_toTopOf="projectFavorite"
+            app:tint="@color/teal_700" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

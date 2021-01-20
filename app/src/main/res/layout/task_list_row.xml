@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/black"
+    android:clickable="true"
+    android:focusable="true"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/padding_list_row"
+    android:paddingStart="?listPreferredItemPaddingLeft"
+    android:paddingEnd="?listPreferredItemPaddingRight"
+    android:paddingTop="@dimen/padding_list_row">
+
+    <LinearLayout
+        android:id="@+id/message_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:orientation="vertical"
+        android:paddingLeft="44dp"
+        android:paddingRight="@dimen/padding_list_row">
+
+        <TextView
+            android:id="@+id/content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:text="Verifica di italiano"
+            android:textColor="@color/white"
+            android:textSize="@dimen/msg_text_primary"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/icon_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:id="@+id/icon_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/border_icon"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/round_background"
+                app:tint="#33BF3D27" />
+
+            <ImageView
+                android:id="@+id/checkTask"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:layout_centerInParent="true"
+                android:src="@drawable/done" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/icon_front"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/content_icon"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/border"
+                app:tint="@color/red" />
+<!--
+            <TextView
+                android:id="@+id/icon_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/icon_text" />
+-->
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/message_container"
+        android:paddingLeft="40dp">
+
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentStart="true"
+            android:src="@drawable/schedule"
+            app:tint="@color/red" />
+
+        <TextView
+            android:id="@+id/due_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="40dp"
+            android:text="19 Dec 2020"
+            android:textColor="@color/red"
+            android:textSize="@dimen/msg_text_secondary" />
+
+        <TextView
+            android:id="@+id/project_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="20dp"
+            android:text="System"
+            android:textColor="@color/white"
+            android:textSize="@dimen/msg_text_secondary" />
+
+        <ImageView
+            android:id="@+id/project_color"
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:layout_alignBottom="@+id/project_name"
+            android:layout_alignParentEnd="true"
+            android:layout_marginBottom="-2dp"
+            android:src="@drawable/round_background"
+            app:tint="@color/colorAccent" />
+    </RelativeLayout>
+<!--
+    <TextView
+        android:id="@+id/timestamp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:textColor="@color/timestamp"
+        android:textSize="@dimen/timestamp"
+        android:textStyle="bold" />
+
+    <ImageView
+        android:id="@+id/icon_star"
+        android:layout_width="@dimen/icon_star"
+        android:layout_height="@dimen/icon_star"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        app:tint="@color/message" />
+-->
+</RelativeLayout>

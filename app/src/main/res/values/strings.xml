@@ -1,0 +1,26 @@
+<resources>
+    <string name="app_name">Task Manager</string>
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="login">Login</string>
+    <string name="create_new">Clicca qui per registrarti</string>
+    <string name="not_register">Non sei ancora registrato?</string>
+    <string name="name">Nome</string>
+    <string name="phone_number">Numero telefonico</string>
+    <string name="register">Registrati</string>
+    <string name="name_error">Inserisci il tuo nome</string>
+    <string name="phone_error">Inserisci il tuo numero di telefono</string>
+    <string name="email_error">Inserisci il tuo indirizzo e-mail</string>
+    <string name="error_invalid_email">Questo indirizzo e-mail non è valido</string>
+    <string name="password_error">Inserisci una password</string>
+    <string name="error_invalid_password">Inserisci una password di almeno 6 caratteri</string>
+    <string name="good_login_1">PERFETTO!</string>
+    <string name="good_login_2">Il Login è avvenuto con successo.</string>
+    <string name="continua">Continua</string>
+    <string name="bad_login_1">ATTENZIONE!</string>
+    <string name="bad_login_2">Qualcosa è andato storto.</string>
+    <string name="navigation_drawer_open">Apertura navigation drawer</string>
+    <string name="navigation_drawer_close">Chiusura navigation drawer</string>
+    <string name="indietro">indietro</string>
+    <string name="cancella">cancella</string>
+</resources>
