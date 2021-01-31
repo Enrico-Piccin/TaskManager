@@ -41,6 +41,13 @@
         <item name="blue_grey_500" type="color">#607d8b</item>
     </array>
 
+    <string-array name="dailyGoal">
+        <item>5</item>
+        <item>10</item>
+        <item>15</item>
+        <item>20</item>
+    </string-array>
+
     <string-array name="projectColorsName">
         <item>Rosso</item>
         <item>Rosa</item>

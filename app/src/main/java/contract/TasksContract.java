@@ -3,6 +3,7 @@ package contract;
 import android.provider.BaseColumns;
 
 public final class TasksContract implements BaseColumns {
+    // Attributi della tabella Tasks
     public static final String TABLE_NAME = "Tasks";
     public static final String ID_TASK = "ID_Task";
     public static final String CONTENUTO = "Contenuto";
@@ -15,6 +16,7 @@ public final class TasksContract implements BaseColumns {
     // il costruttore viene reso privato.
     private TasksContract() {}
 
+    // SQL statement per la creazione della tabella Tasks
     public static final String CREATE_TASKS =
             "CREATE TABLE " + TABLE_NAME + " (" +
                     ID_TASK + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -25,6 +27,7 @@ public final class TasksContract implements BaseColumns {
                     ID_PROGETTO + " SMALLINT REFERENCES " + ProjectsContract.TABLE_NAME + "(" + ProjectsContract.ID_PROGETTO + ") " +
                     ");";
 
+    // SQL statement per l'eliminazione della tabella Tasks
     public static final String DELETE_ENTRIES =
             "DROP TABLE IF EXISTS " + TABLE_NAME;
 }

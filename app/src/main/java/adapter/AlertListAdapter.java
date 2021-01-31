@@ -14,15 +14,16 @@ import com.example.taskmanager.R;
 
 import java.util.ArrayList;
 
-import model.ColorChoiceItem;
+import model.Project;
 
 public class AlertListAdapter extends BaseAdapter {
 
-    private ArrayList<ColorChoiceItem> mData;
-    private Context mContext;
-    private LayoutInflater inflater;
+    private ArrayList<Project> mData;   // Lista di dati
+    private Context mContext;           // Contesto dell'activity chiamante
+    private LayoutInflater inflater;    // Oggetto per l'inflate del layout personalizzato
 
-    public AlertListAdapter(ArrayList<ColorChoiceItem> data, Context context) {
+    // Costruttore generico
+    public AlertListAdapter(ArrayList<Project> data, Context context) {
         mData = data;
         mContext = context;
         inflater = LayoutInflater.from(context);
@@ -45,16 +46,18 @@ public class AlertListAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        // Inflate del layout
         if (convertView == null) {
             LayoutInflater mInflater = (LayoutInflater) mContext
                     .getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
             convertView = mInflater.inflate(R.layout.color_choice_item, parent, false);
         }
 
+        // Inizializzazione ed impostazione del nome e del valore del colore
         ImageView colorValue = convertView.findViewById(R.id.imgProjectColor);
         TextView colorName = convertView.findViewById(R.id.textViewColorName);
-        colorValue.setColorFilter(mData.get(position).getColorValue(), PorterDuff.Mode.SRC_ATOP);
-        colorName.setText(mData.get(position).getColorName());
+        colorValue.setColorFilter(mData.get(position).getColore(), PorterDuff.Mode.SRC_ATOP);
+        colorName.setText(mData.get(position).getNome());
 
         return convertView;
     }

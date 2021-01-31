@@ -6,15 +6,17 @@ import android.os.Parcelable;
 import java.util.Date;
 
 public class Project implements Parcelable {
-    private int idProject;
-    private String nome;
-    private int colore;
-    private int idParent;
-    private boolean favorite;
-    private String email;
+    private int idProject;      // ID univoco del progetto
+    private String nome;        // Nome del progetto
+    private int colore;         // Colore del progetto
+    private int idParent;       // ID del progetto padre
+    private boolean favorite;   // Flag di impostazione della preferenza sul progetto
+    private String email;       // E-mail dell'utente associato al progetto
 
+    // Costruttore di default
     public Project() { }
 
+    // Costruttore generico
     public Project(int idProject, String nome, int colore, int idParent, boolean favorite, String email) {
         this.idProject = idProject;
         this.nome = nome;
@@ -24,6 +26,7 @@ public class Project implements Parcelable {
         this.email = email;
     }
 
+    // Getters & Setters
     public int getIdProject() {
         return idProject;
     }
@@ -72,11 +75,13 @@ public class Project implements Parcelable {
         this.email = email;
     }
 
+    // Implementazione dei metodi dell'interfaccia Parcelable
     @Override
     public int describeContents() {
         return 0;
     }
 
+    // Metodo usato per serializzare l'oggetto
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.idProject);

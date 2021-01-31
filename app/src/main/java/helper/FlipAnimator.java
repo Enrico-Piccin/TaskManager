@@ -11,9 +11,7 @@ public class FlipAnimator {
     private static String TAG = FlipAnimator.class.getSimpleName();
     private static AnimatorSet leftIn, rightOut, leftOut, rightIn;
 
-    /**
-     * Performs flip animation on two views
-     */
+    // Esegue una aniumazine fra due view
     public static void flipView(Context context, final View back, final View front, boolean showFront) {
         leftIn = (AnimatorSet) AnimatorInflater.loadAnimator(context, R.animator.card_flip_left_in);
         rightOut = (AnimatorSet) AnimatorInflater.loadAnimator(context, R.animator.card_flip_right_out);

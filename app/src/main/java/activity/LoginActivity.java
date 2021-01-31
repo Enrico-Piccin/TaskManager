@@ -1,10 +1,9 @@
-package com.example.taskmanager;
+package activity;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -16,6 +15,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.example.taskmanager.Cryptograph;
+import com.example.taskmanager.DatabaseHelper;
+import com.example.taskmanager.R;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.io.Serializable;
@@ -25,18 +27,19 @@ import java.util.Date;
 import model.User;
 
 public class LoginActivity extends AppCompatActivity implements Serializable {
-    EditText editTextEmail, editTextPassword;
-    Button btnLogin;
-    TextView txtViewRegister;
-    TextInputLayout errEmail, errPassword;
-    boolean emailValida, pswValida;
-    private final int PSW_LENGTH = 6;
+    EditText editTextEmail, editTextPassword;   // EditText per l'inserimento di e-mail e password
+    Button btnLogin;                            // Bottone di conferma Login
+    TextView txtViewRegister;                   // TextView di reindirizzamento alla RegisterActivity
+    TextInputLayout errEmail, errPassword;      // Gestione errori inserimento
+    boolean emailValida, pswValida;             // Flag di validità credenziali
+    private final int PSW_LENGTH = 6;           // Lunghezza minima della password
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        // Ottenimento referenze degli oggetti grafici
         editTextEmail = findViewById(R.id.email);
         editTextPassword = findViewById(R.id.password);
         btnLogin = findViewById(R.id.login);
@@ -86,7 +89,8 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
             errPassword.setErrorEnabled(false);
         }
 
-        if (emailValida && pswValida) {  // Verifica della correttezza delle credenziali
+        // Verifica della correttezza delle credenziali
+        if (emailValida && pswValida) {
             DatabaseHelper db = new DatabaseHelper(this);
             String psw_encrypted = null;
             Log.d("Errore", "La password non criptata letta in LOGIN è: " + editTextPassword.getText().toString());
@@ -98,32 +102,34 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
 
             }
 
-            Log.d("Errore", "La data di oggi è " + new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
-
+            // Verifica della presenza dell'utente
             User u = db.getUser(editTextEmail.getText().toString(), psw_encrypted);
 
             if(u == null || u.getEmail() == null || u.getPassword() == null)
-                showAlertDialog(this, R.layout.bad_login, null);
+                showAlertDialog(this, R.layout.bad_login, null);     // Esito negativo
             else
-                showAlertDialog(this, R.layout.good_login, u);
+                showAlertDialog(this, R.layout.good_login, u);          // Esito positivo
         } else {
-            showAlertDialog(this, R.layout.bad_login, null);
+            showAlertDialog(this, R.layout.bad_login, null);        // Esito positivo
         }
     }
 
     public static void showAlertDialog(Activity context, int layout, User u){
+        // Creazione di un dialog con layout personalizzato
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(context);
-        View layoutView = context.getLayoutInflater().inflate(layout, null);
-        Button dialogButton = layoutView.findViewById(R.id.btnDialog);
+        View layoutView = context.getLayoutInflater().inflate(layout,null); // Layout personalizzato
+        Button dialogButton = layoutView.findViewById(R.id.btnDialog);           // Bottone persente nel layout
         dialogBuilder.setView(layoutView);
         AlertDialog alertDialog = dialogBuilder.create();
-        alertDialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
+        alertDialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;     // Impostazione animazione dialog
         alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         alertDialog.show();
+        // Gestione del click sul bottone del dialog
         dialogButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 alertDialog.dismiss();
+                // Reindirzzamento alla TaskListActivity solamente se l'esito del Login è positivo
                 if(layout == context.getResources().getIdentifier("good_login", "layout", context.getPackageName())) {
                     Intent intent = new Intent(context.getApplicationContext(), TaskListActivity.class);
                     intent.putExtra("key_object", u);

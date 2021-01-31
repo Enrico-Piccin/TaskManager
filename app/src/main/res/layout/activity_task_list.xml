@@ -23,8 +23,8 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="@color/cardview_dark_background"
-            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+            android:theme="@style/ActionBar"
+            app:popupTheme="@style/AppTheme.PopupOverlay"
             android:elevation="4dp">
 
             <LinearLayout
@@ -46,7 +46,7 @@
                     android:layout_marginLeft="5dip"
                     android:layout_marginBottom="2dip"
                     android:layout_marginTop="2dip"
-                    android:text="Upcoming"
+                    android:text="Inbox"
                     android:gravity="center_vertical"
                     android:layout_weight="100"
                     android:paddingLeft="5dip"
@@ -56,14 +56,14 @@
             </LinearLayout>
         </androidx.appcompat.widget.Toolbar>
 
+        <include layout="@layout/content_task_list"/>
+
         <FrameLayout
             android:id="@+id/fragment_container"
             android:layout_marginTop="?attr/actionBarSize"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
-
-        <include layout="@layout/content_task_list"/>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab"

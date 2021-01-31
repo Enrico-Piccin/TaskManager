@@ -4,7 +4,7 @@
     <string name="prompt_password">Password</string>
     <string name="login">Login</string>
     <string name="create_new">Clicca qui per registrarti</string>
-    <string name="not_register">Non sei ancora registrato?</string>
+    <string name="already_registered">Se già registrato?</string>
     <string name="name">Nome</string>
     <string name="phone_number">Numero telefonico</string>
     <string name="register">Registrati</string>
@@ -23,4 +23,20 @@
     <string name="navigation_drawer_close">Chiusura navigation drawer</string>
     <string name="indietro">indietro</string>
     <string name="cancella">cancella</string>
+    <string name="modifica">modifica</string>
+
+    <!-- Preference Titles -->
+    <string name="messages_header">Messages</string>
+    <string name="sync_header">Sync</string>
+
+    <!-- Messages Preferences -->
+    <string name="signature_title">Your signature</string>
+    <string name="reply_title">Default reply action</string>
+
+    <!-- Sync Preferences -->
+    <string name="sync_title">Sync email periodically</string>
+    <string name="attachment_title">Download incoming attachments</string>
+    <string name="attachment_summary_on">Automatically download attachments for incoming emails
+    </string>
+    <string name="attachment_summary_off">Only download attachments when manually requested</string>
 </resources>

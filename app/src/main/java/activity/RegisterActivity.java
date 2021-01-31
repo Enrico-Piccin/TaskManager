@@ -1,10 +1,9 @@
-package com.example.taskmanager;
+package activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -15,26 +14,31 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.example.taskmanager.Cryptograph;
+import com.example.taskmanager.DatabaseHelper;
+import com.example.taskmanager.R;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
+import activity.LoginActivity;
 import model.User;
 
 public class RegisterActivity extends AppCompatActivity {
-    EditText editTextName, editTextEmail, editTextPhone, editTextPassword;
-    Button btnRegister;
-    TextView txtViewLogin;
-    TextInputLayout errName, errEmail, errPhone, errPassword;
-    boolean nameValido, emailValida, phoneValido, pswValida;
-    private final int PSW_LENGTH = 6;
+    EditText editTextName, editTextEmail, editTextPhone, editTextPassword;  // EditText per l'inserimento di e-mail, password, numero di telefono e nome
+    Button btnRegister;     // Bottone di registrazione
+    TextView txtViewLogin;  // TextView di reindirizzamento alla LoginActivity
+    TextInputLayout errName, errEmail, errPhone, errPassword;   // Gestione errori inserimento
+    boolean nameValido, emailValida, phoneValido, pswValida;    // Flag di validità credenziali
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
+        // Ottenimento referenze degli oggetti grafici
         editTextName = (EditText) findViewById(R.id.name);
         editTextEmail = (EditText) findViewById(R.id.email);
         editTextPhone = (EditText) findViewById(R.id.phone);
@@ -49,7 +53,7 @@ public class RegisterActivity extends AppCompatActivity {
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                convalidaRegister();
+                convalidaRegister();    // Verifica della correttezza delle credenziali
             }
         });
 
@@ -73,7 +77,7 @@ public class RegisterActivity extends AppCompatActivity {
             errName.setErrorEnabled(false);
         }
 
-        // Check for a valid email address.
+        // Verifica della validità dell'indirizzo e-mail
         if (editTextEmail.getText().toString().isEmpty()) {
             errEmail.setError(getResources().getString(R.string.email_error));
             emailValida = false;
@@ -85,7 +89,7 @@ public class RegisterActivity extends AppCompatActivity {
             errEmail.setErrorEnabled(false);
         }
 
-        // Check for a valid phone number.
+        // Verifica della validità del numero di telefono
         if (editTextPhone.getText().toString().isEmpty()) {
             errPhone.setError(getResources().getString(R.string.phone_error));
             phoneValido = false;
@@ -94,7 +98,7 @@ public class RegisterActivity extends AppCompatActivity {
             errPhone.setErrorEnabled(false);
         }
 
-        // Check for a valid password.
+        // Verifica della validità della password
         if (editTextPassword.getText().toString().isEmpty()) {
             errPassword.setError(getResources().getString(R.string.password_error));
             pswValida = false;
@@ -106,6 +110,7 @@ public class RegisterActivity extends AppCompatActivity {
             errPassword.setErrorEnabled(false);
         }
 
+        // Verifica della correttezza delle credenziali
         if (nameValido && emailValida && phoneValido && pswValida) {
             DatabaseHelper db = new DatabaseHelper(this);
             String psw_encrypted = null;
@@ -115,26 +120,28 @@ public class RegisterActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
 
-            Log.d("Errore", "La password criptata in fase fi REGISTRAZIONE è: " + psw_encrypted);
+            Log.d("Errore", "La password criptata in fase di REGISTRAZIONE è: " + psw_encrypted);
 
+            // Verifica della presenza dell'utente
             User u = db.getUser(editTextEmail.getText().toString(), psw_encrypted);
 
             if(u == null || u.getEmail() == null || u.getPassword() == null) {
+                // Creazione del nuovo utente
                 User newU = new User(editTextName.getText().toString(), editTextEmail.getText().toString(),
-                        editTextPhone.getText().toString(), psw_encrypted, getRandomMaterialColor(Math.random() < 0.50 ? "400" : "500"), 0, new Date(Integer.parseInt(new SimpleDateFormat("yyyy-MM-dd").format(new Date()).split("-")[0]), Integer.parseInt(new SimpleDateFormat("yyyy-MM-dd").format(new Date()).split("-")[1]), Integer.parseInt(new SimpleDateFormat("yyyy-MM-dd").format(new Date()).split("-")[2])));
-                db.addUser(newU);
+                        editTextPhone.getText().toString(), psw_encrypted, getRandomMaterialColor(Math.random() < 0.50 ? "400" : "500"), 0,
+                        Calendar.getInstance().getTime());
+                db.addUser(newU);   // Aggiunta dell'utente al database
                 getSharedPreferences(newU.getEmail(), Context.MODE_PRIVATE).edit().putInt("DAILY_TASKS", 5).apply();
-                LoginActivity.showAlertDialog(this, R.layout.good_login, newU);
+                LoginActivity.showAlertDialog(this, R.layout.good_login, newU); // Esito positivo
             }
             else
-                LoginActivity.showAlertDialog(this, R.layout.bad_login, null);
+                LoginActivity.showAlertDialog(this, R.layout.bad_login, null);  // Esito negativo
         } else
-            LoginActivity.showAlertDialog(this, R.layout.bad_login, null);
+            LoginActivity.showAlertDialog(this, R.layout.bad_login, null);      // Esito negativo
     }
 
-    /**
-     * Viene scelto un colore random dal file array.xml
-     */
+
+    // Viene scelto un colore random dal file array.xml
     private int getRandomMaterialColor(String typeColor) {
         int returnColor = Color.GRAY;
         int arrayId = getResources().getIdentifier("mdcolor_" + typeColor, "array", getPackageName());

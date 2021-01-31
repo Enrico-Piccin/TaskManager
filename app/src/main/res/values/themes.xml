@@ -2,8 +2,8 @@
     <!-- Base application theme. -->
     <style name="Theme.TaskManager" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/purple_500</item>
-        <item name="colorPrimaryVariant">@color/purple_700</item>
+        <item name="colorPrimary">@color/red</item>
+        <item name="colorPrimaryVariant">@color/red</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/teal_200</item>
@@ -17,6 +17,7 @@
         <item name="windowActionModeOverlay">true</item>
         <item name="android:actionModeBackground">@color/action</item>
         <item name="android:itemBackground">@color/subject</item>
+        <item name="android:panelFullBackground">@android:color/black</item>
         <item name="android:textColor">@color/white</item>
         <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
         <item name="android:textColorSecondary">@color/white</item>
@@ -24,9 +25,25 @@
         <item name="android:windowTranslucentStatus" tools:targetApi="19">true</item>
     </style>
 
+    <style name="Switch" parent="Theme.AppCompat.Light">
+        <!-- active thumb & track color (30% transparency) -->
+        <item name="colorControlActivated">@color/red</item>
+
+        <!-- inactive thumb color -->
+        <item name="colorSwitchThumbNormal">#f1f1f1</item>
+
+        <!-- inactive track color (30% transparency) -->
+        <item name="android:colorForeground">#42221f1f</item>
+    </style>
+
     <style name="DrawerBackground">
         <item name="android:itemBackground">@color/subject</item>
         <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="ActionBar" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="popupMenuBackground">@color/subject</item>
+        <item name="android:itemBackground">@color/subject</item>
     </style>
 
     <style name="DrawerArrowStyle" parent="Widget.AppCompat.DrawerArrowToggle">
@@ -44,9 +61,16 @@
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Dark">
+        <!-- added all to see which one will work.-->
+        <item name="android:popupMenuStyle">@style/PopupMenu</item>
+        <item name="android:itemBackground">@color/subject</item>
+        <item name="android:colorBackground">@color/subject</item>
+    </style>
 
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    <style name="PopupMenu" parent="@android:style/Widget.PopupMenu">
+        <item name="android:popupBackground">@color/subject</item>
+    </style>
 
     <style name="DatePicker" parent="Theme.AppCompat.Light.Dialog">
         <item name="colorPrimary">@color/action</item>

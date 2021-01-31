@@ -56,6 +56,7 @@ public class Cryptograph {
             kpg.generateKeyPair();
         }
 
+        // Memorizzazione delle chiavi nelle SharedPreferences
         SharedPreferences pref = context.getSharedPreferences("CRYPTOGRAPHY", Context.MODE_PRIVATE);
         String encryptedKeyB64 = pref.getString("ENCRYPTED_KEY", null);
         if (encryptedKeyB64 == null) {
@@ -106,10 +107,10 @@ public class Cryptograph {
         return bytes;
     }
 
+    // Ottenimento della chiave segreta dalle sharedPreferences
     private Key getSecretKey(Context context) throws Exception{
         SharedPreferences pref = context.getSharedPreferences("CRYPTOGRAPHY", Context.MODE_PRIVATE);
         String encryptedKeyB64 = pref.getString("ENCRYPTED_KEY", null);
-        // need to check null, omitted here
 
         byte[] encryptedKey = Base64.decode(encryptedKeyB64, Base64.DEFAULT);
 
@@ -118,6 +119,7 @@ public class Cryptograph {
         return new SecretKeySpec(key, "AES");
     }
 
+    // Cifratura con AES
     public String encrypt(Context context, byte[] input) throws Exception {
         Cipher c = Cipher.getInstance(AES_MODE, "BC");
         c.init(Cipher.ENCRYPT_MODE, getSecretKey(context));
@@ -125,6 +127,7 @@ public class Cryptograph {
         return Base64.encodeToString(encodedBytes, Base64.DEFAULT);
     }
 
+    // Decifratura con AES
     public byte[] decrypt(Context context, byte[] encrypted) throws Exception {
         Cipher c = Cipher.getInstance(AES_MODE, "BC");
         c.init(Cipher.DECRYPT_MODE, getSecretKey(context));

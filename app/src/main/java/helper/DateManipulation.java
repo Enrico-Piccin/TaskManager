@@ -2,23 +2,33 @@ package helper;
 
 import android.text.format.DateUtils;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
 public class DateManipulation {
 
+    // Controllo se due date coincidono
+    public static boolean areSameDate(Date d1, Date d2) {
+        return new SimpleDateFormat("yyyyMMdd").format(d1).equals(new SimpleDateFormat("yyyyMMdd").format(d2));
+    }
+
+    // Verifica se la data passata come parametro coincide con il giorno precedente a quello corrente
     public static boolean isYesterday(Date d) {
         return DateUtils.isToday(d.getTime() + DateUtils.DAY_IN_MILLIS);
     }
 
+    // Verifica se la data passata come parametro coincide con il giorno corrente
     public static boolean isToday(Date d) {
         return DateUtils.isToday(d.getTime());
     }
 
+    // Verifica se la data passata come parametro coincide con il giorno successivo a quello corrente
     public static boolean isTomorrow(Date d) {
         return DateUtils.isToday(d.getTime() - DateUtils.DAY_IN_MILLIS);
     }
 
+    // Restituisce il nome del giorno della settimana
     public static String getWeekDay(Date d) {
         Calendar c = Calendar.getInstance();
         c.setTime(d);
@@ -47,6 +57,7 @@ public class DateManipulation {
             return null;
     }
 
+    // Verifica se la data passata come parametro si trova all'interno del range di sette giorni rispetto alla data corrente
     public static boolean dateWithinWeek(Date d) {
         Calendar c = Calendar.getInstance();
 

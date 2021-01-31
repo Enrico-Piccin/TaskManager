@@ -10,4 +10,7 @@
     <dimen name="icon_text">22dp</dimen>
     <dimen name="timestamp">12dp</dimen>
     <dimen name="icon">28dp</dimen>
+    <dimen name="maxWidthSmall">120dp</dimen>
+    <dimen name="maxWidth">150dp</dimen>
+    <dimen name="maxWidthProject">250dp</dimen>
 </resources>

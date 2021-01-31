@@ -1,7 +1,6 @@
 package adapter;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.util.Log;
 import android.util.SparseBooleanArray;
@@ -17,31 +16,31 @@ import android.widget.TextView;
 import androidx.core.graphics.ColorUtils;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.taskmanager.R;
-import com.google.android.material.transition.Hold;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import helper.CircleTransform;
 import helper.FlipAnimator;
+import model.Project;
 import model.Task;
 
 public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.MyViewHolder> {
-    private Context mContext;
-    private List<Task> tasks;
-    private TaskAdapterListener listener;
-    private SparseBooleanArray selectedItems;
+    private Context mContext;                   // Contesto dell'activity chiamante
+    private List<Task> tasks;                   // Lista di task
+    private List<Project> projects;             // Lista di progetti
+    private TaskAdapterListener listener;       // Listener dei click sui progetti
+    private SparseBooleanArray selectedItems;   // Flag di controllo selezione
 
-    // Array usato per effettuare animazioni multimple in una volta
+    // Array usato per effettuare animazioni multiple in una volta
     private SparseBooleanArray animationItemsIndex;
     private boolean reverseAllAnimations = false;
 
-    // L'indice è usato per animare solo la Task selezionata
+    // L'indice è usato per animare solo la task selezionata
     private static int currentSelectedIndex = -1;
 
+    // Container di oggetti grafici rappresentanti la singola task
     public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnLongClickListener {
         public TextView content, dueDate, projectName;
         public ImageView borderIcon, contentIcon, projectColor;
@@ -50,6 +49,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.MyViewHolder> 
 
         public MyViewHolder(View view) {
             super(view);
+            // Ottenimento delle referenze agli oggetti/proprietà di ciascuna task
             content = (TextView) view.findViewById(R.id.content);
             projectName = (TextView) view.findViewById(R.id.project_name);
             dueDate = (TextView) view.findViewById(R.id.due_date);
@@ -65,15 +65,18 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.MyViewHolder> 
 
         @Override
         public boolean onLongClick(View view) {
+            // Gestione del click prolungato su una task
             listener.onRowLongClicked(getAdapterPosition());
             view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
             return true;
         }
     }
 
-    public TaskAdapter(Context mContext, List<Task> tasks, TaskAdapterListener listener) {
+    // Costruttore generico
+    public TaskAdapter(Context mContext, List<Task> tasks, List<Project> projects, TaskAdapterListener listener) {
         this.mContext = mContext;
         this.tasks = tasks;
+        this.projects = projects;
         this.listener = listener;
         selectedItems = new SparseBooleanArray();
         animationItemsIndex = new SparseBooleanArray();
@@ -81,6 +84,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.MyViewHolder> 
 
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        // Inflate del layout personalizzato di ciascuna task
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.task_list_row, parent, false);
 
@@ -90,22 +94,18 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.MyViewHolder> 
     @Override
     public void onBindViewHolder(final MyViewHolder holder, final int position) {
         Task task = tasks.get(position);
+        Project p = projects.get(getProjectIdx(task.getIdProject()));
+
+        int[] colorValues = mContext.getResources().getIntArray(R.array.mdcolor_500);
 
         // Visualizzazione dei dati nelle TextView
         holder.content.setText(task.getContent());
-        holder.projectName.setText(/*task.getIdProject()*/"Sistemi");
+        holder.projectName.setText(p.getNome());
+        holder.projectColor.setColorFilter(p.getColore() != 0 ? colorValues[getProjectColorPosition(p.getColore(), colorValues)] : mContext.getResources().getColor(R.color.colorPrimary), PorterDuff.Mode.SRC_ATOP);
         holder.dueDate.setText(new SimpleDateFormat("dd/MM/yyyy").format(task.getDueDate()));
 
         // Modifica dello stato del record in attivato
         holder.itemView.setActivated(selectedItems.get(position, false));
-
-        /*
-        // change the font style depending on message read status
-        applyReadStatus(holder, message);
-
-        // handle message star
-        applyImportant(holder, message);
-        */
 
         // Applicazione dell'animazione dell'icona
         applyIconAnimation(holder, position);
@@ -117,21 +117,24 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.MyViewHolder> 
         applyClickEvents(holder, position);
     }
 
+    // Restituisce l'indice del colore selezionato nell'array
+    private int getProjectColorPosition(int colore, int[] colorValues) {
+        for(int i = 0; i < colorValues.length; i++) {
+            if(colore == colorValues[i]) return i;
+        }
+        return 0;
+    }
+
     private void applyClickEvents(MyViewHolder holder, final int position) {
+        // Click sull'icona della task
         holder.iconContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 listener.onIconClicked(position);
             }
         });
-/*
-        holder.iconImp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                listener.onIconImportantClicked(position);
-            }
-        });
-*/
+
+        // Click sul contenuto della task
         holder.messageContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -139,6 +142,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.MyViewHolder> 
             }
         });
 
+        // Click prolungato sul contenuto della task
         holder.messageContainer.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
@@ -149,7 +153,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.MyViewHolder> 
         });
     }
 
-
+    // Colorazione dell'icona della task in base alla priorità
     private void applyProfilePicture(MyViewHolder holder, Task task) {
         switch (task.getPriority()) {
             case 1:
@@ -172,26 +176,10 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.MyViewHolder> 
                 holder.borderIcon.setColorFilter(mContext.getResources().getColor(R.color.teal_700), PorterDuff.Mode.SRC_ATOP);
                 break;
         }
-        /*
-        if (!TextUtils.isEmpty(message.getPicture())) {
-            Glide.with(mContext).load(message.getPicture())
-                    .thumbnail(0.5f)
-                    .crossFade()
-                    .transform(new CircleTransform(mContext))
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .into(holder.contentIcon);
-            holder.contentIcon.setColorFilter(null);
-            holder.iconText.setVisibility(View.GONE);
-        } else {
-            holder.contentIcon.setImageResource(R.drawable.round_background);
-            holder.contentIcon.setColorFilter(message.getColor());
-            holder.iconText.setVisibility(View.VISIBLE);
-        }
-        */
-
     }
 
     private void applyIconAnimation(MyViewHolder holder, int position) {
+        // Gestione dell'animazione del click sull'icona della task
         if (selectedItems.get(position, false)) {
             holder.iconFront.setVisibility(View.GONE);
             resetIconYAxis(holder.iconBack);
@@ -222,6 +210,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.MyViewHolder> 
         }
     }
 
+    // Reset delle animazioni sulle task
     public void resetAnimationIndex() {
         reverseAllAnimations = false;
         animationItemsIndex.clear();
@@ -232,35 +221,14 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.MyViewHolder> 
         return tasks.get(position).getIdTask();
     }
 
-    public static int addAlpha(int color, int alpha) {
-        return ColorUtils.setAlphaComponent(color, alpha);
-    }
-
-/*
-    private void applyImportant(MyViewHolder holder, Message message) {
-        if (message.isImportant()) {
-            holder.iconImp.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.good_login));
-            holder.iconImp.setColorFilter(ContextCompat.getColor(mContext, R.color.selected));
-        } else {
-            holder.iconImp.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.bad_login));
-            holder.iconImp.setColorFilter(ContextCompat.getColor(mContext, R.color.message));
+    // Restituisce l'indice del progetto dato il suo ID
+    private int getProjectIdx(int id) {
+        for(int i = 0; i < projects.size(); i++){
+            if(id == projects.get(i).getIdProject())
+                return i;
         }
+        return 0;
     }
-
-    private void applyReadStatus(MyViewHolder holder, Message message) {
-        if (message.isRead()) {
-            holder.from.setTypeface(null, Typeface.NORMAL);
-            holder.subject.setTypeface(null, Typeface.NORMAL);
-            holder.from.setTextColor(ContextCompat.getColor(mContext, R.color.subject));
-            holder.subject.setTextColor(ContextCompat.getColor(mContext, R.color.message));
-        } else {
-            holder.from.setTypeface(null, Typeface.BOLD);
-            holder.subject.setTypeface(null, Typeface.BOLD);
-            holder.from.setTextColor(ContextCompat.getColor(mContext, R.color.black));
-            holder.subject.setTextColor(ContextCompat.getColor(mContext, R.color.subject));
-        }
-    }
-*/
 
     @Override
     public int getItemCount() {
@@ -268,6 +236,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.MyViewHolder> 
     }
 
     public void toggleSelection(int pos) {
+        // Abilitazione e aggiornamento grafico della selezione della task
         currentSelectedIndex = pos;
         if (selectedItems.get(pos, false)) {
             selectedItems.delete(pos);
@@ -280,6 +249,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.MyViewHolder> 
     }
 
     public void clearSelections() {
+        // Pulizia della selezione
         reverseAllAnimations = true;
         selectedItems.clear();
         notifyDataSetChanged();
@@ -289,6 +259,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.MyViewHolder> 
         return selectedItems.size();
     }
 
+    // Ritorna una una lista di indici delle task selezionate
     public List<Integer> getSelectedItems() {
         List<Integer> items =
                 new ArrayList<>(selectedItems.size());
@@ -298,6 +269,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.MyViewHolder> 
         return items;
     }
 
+    // Rimuove la task specificata
     public void removeData(int position) {
         tasks.remove(position);
         resetCurrentIndex();
@@ -307,10 +279,9 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.MyViewHolder> 
         currentSelectedIndex = -1;
     }
 
+    // Forzatura dell'implementazione degli eventi di click con un'interfaccia
     public interface TaskAdapterListener {
         void onIconClicked(int position);
-
-        // void onIconImportantClicked(int position);
 
         void onMessageRowClicked(int position);
 

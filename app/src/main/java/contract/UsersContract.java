@@ -1,13 +1,9 @@
 package contract;
 
-import android.graphics.Color;
-import android.os.Parcel;
-import android.os.Parcelable;
 import android.provider.BaseColumns;
 
-import java.util.Date;
-
-public final class UsersContract implements BaseColumns{
+public final class UsersContract implements BaseColumns {
+    // SQL statement per l'eliminazione della tabella Utenti
     public static final String TABLE_NAME = "Utenti";
     public static final String NOME_UTENTE = "Nome";
     public static final String EMAIL_UTENTE = "Email";
@@ -21,6 +17,7 @@ public final class UsersContract implements BaseColumns{
     // il costruttore viene reso privato.
     private UsersContract() {}
 
+    // SQL statement per la creazione della tabella Utenti
     public static final String CREATE_USERS =
             "CREATE TABLE " + TABLE_NAME + " (" +
                     EMAIL_UTENTE + " VARCHAR(255) PRIMARY KEY," +
@@ -32,6 +29,7 @@ public final class UsersContract implements BaseColumns{
                     LAST_ACCESS + " DATE NOT NULL" +
             ");";
 
+    // SQL statement per l'eliminazione della tabella Utenti
     public static final String DELETE_ENTRIES =
             "DROP TABLE IF EXISTS " + TABLE_NAME;
 }

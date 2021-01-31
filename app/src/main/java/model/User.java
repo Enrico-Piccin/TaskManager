@@ -5,16 +5,21 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.provider.BaseColumns;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
-// Classe interna che definisce il contenuto della tabella Utenti
 public class User implements Parcelable {
+    // Attributi specifici del singolo utente
     private String nome, email, telefono, password;
     private int colore, task;
     private Date lastAccess;
 
+    // Costruttore di default
     public User() {}
 
+    // Costruttore generico
     public User(String nome, String email, String telefono, String password, int colore, int task, Date lastAccess) {
         this.nome = nome;
         this.email = email;
@@ -25,9 +30,12 @@ public class User implements Parcelable {
         this.lastAccess = lastAccess;
     }
 
+    // Getters & Setters
     public String getNome() {
         return nome;
     }
+
+    public void setNome(String nome) { this.nome = nome; }
 
     public String getEmail() {
         return email;
@@ -49,6 +57,8 @@ public class User implements Parcelable {
         return task;
     }
 
+    public void setTask(int task) { this.task = task; }
+
     public Date getLastAccess() {
         return lastAccess;
     }
@@ -57,6 +67,7 @@ public class User implements Parcelable {
         this.lastAccess = lastAccess;
     }
 
+    // Implementazione dei metodi dell'interfaccia Parcelable
     @Override
     public int describeContents() {
         return 0;
@@ -71,14 +82,20 @@ public class User implements Parcelable {
         dest.writeString(this.password);
         dest.writeInt(this.colore);
         dest.writeInt(this.task);
-        dest.writeString(this.lastAccess.toLocaleString());
+        dest.writeString(new SimpleDateFormat("yyyy-MM-dd").format(this.lastAccess));
     }
 
     // Metodo usato per rigenerare l'oggetto. Tutti i Parcelables devono avere un CREATORE che implementi questi due metodi
     public static final Parcelable.Creator<User>
             CREATOR = new Parcelable.Creator<User>() {
         public User createFromParcel(Parcel in) {
-            return new User(in.readString(), in.readString(), in.readString(), in.readString(), in.readInt(), in.readInt(), new Date(in.readString()));
+            try {
+                return new User(in.readString(), in.readString(), in.readString(), in.readString(), in.readInt(), in.readInt(), new SimpleDateFormat("yyyy-MM-dd").parse(in.readString()));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+            return new User(in.readString(), in.readString(), in.readString(), in.readString(), in.readInt(), in.readInt(), Calendar.getInstance().getTime());
         }
 
         public User[] newArray(int size) {

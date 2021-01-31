@@ -3,15 +3,17 @@ package model;
 import java.util.Date;
 
 public class Task {
-    private int idTask;
-    private String content;
-    private int priority;
-    private Date dueDate;
-    private int idProject;
-    private String email;
+    private int idTask;     // ID univoco della task
+    private String content; // Contenuto della task
+    private int priority;   // Priorità della task
+    private Date dueDate;   // Data di scadenza della task
+    private int idProject;  // ID del progetto di appartenenza
+    private String email;   // Email dell'utente a cui è associata la task
 
+    // Costruttore di default
     public Task() { }
 
+    // Costruttore generico
     public Task(int idTask, String content, int priority, Date dueDate, int idProject, String email) {
         this.idTask = idTask;
         this.content = content;
@@ -21,6 +23,7 @@ public class Task {
         this.email = email;
     }
 
+    // Getters & Setters
     public int getIdTask() {
         return idTask;
     }

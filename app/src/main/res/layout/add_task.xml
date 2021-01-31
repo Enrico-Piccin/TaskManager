@@ -49,10 +49,13 @@
     <Button
         android:id="@+id/btnProjectSelector"
         android:layout_width="wrap_content"
+        android:maxWidth="@dimen/maxWidthSmall"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:layout_weight="1"
+        android:maxLines="1"
+        android:ellipsize="end"
         android:background="@drawable/border"
         android:text="Inbox"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
@@ -65,8 +68,8 @@
 
     <ImageButton
         android:id="@+id/priority"
-        android:layout_width="28dp"
-        android:layout_height="28dp"
+        android:layout_width="26dp"
+        android:layout_height="26dp"
         android:layout_marginStart="16dp"
         android:background="@drawable/flag"
         app:layout_constraintBottom_toBottomOf="@+id/btnProjectSelector"

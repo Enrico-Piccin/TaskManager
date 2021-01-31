@@ -1,12 +1,15 @@
 package helper;
 
 public class EnglishNumberWord {
+    // Lista di nomi delle 3 decine
     private static final String[] tensNames = { "", "ten", "twenty", "thirty" };
 
+    // Lista di nomi delle unità intermedie
     private static final String[] numNames = { "", "one", "two", "three", "four", "five",
             "six", "seven", "eight", "nine", "ten", "eleven", "twelve", "thirteen",
             "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen" };
 
+    // Converte un numero nel corrispettivo letterale
     public static String convert(int number) {
         String word;
 
@@ -24,6 +27,4 @@ public class EnglishNumberWord {
         }
         return word;
     }
-
-
 }

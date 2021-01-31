@@ -10,7 +10,6 @@ import android.util.Log;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import contract.ProjectsContract;
@@ -24,15 +23,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final int DATABASE_VERSION = 1;
     public static final String DATABASE_NAME = "UserTaskManager.db";
 
+    // Costruttore generico
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL(UsersContract.CREATE_USERS);
-        db.execSQL(TasksContract.CREATE_TASKS);
-        db.execSQL(ProjectsContract.CREATE_PROJECTS);
+        db.execSQL(UsersContract.CREATE_USERS);         // Creazione tabella Users
+        db.execSQL(TasksContract.CREATE_TASKS);         // Creazione tabella Tasks
+        db.execSQL(ProjectsContract.CREATE_PROJECTS);   // Creazione tabella Projects
     }
 
     @Override
@@ -49,7 +49,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         onUpgrade(db, oldVersion, newVersion);
     }
 
-    // Aggiunta di un nuovo utente
+    // Aggiunta di un nuovo User
     public void addUser(User u) {
         // Ottenimento del repository dei dati in modalità di scrittura
         SQLiteDatabase db = this.getWritableDatabase();
@@ -69,7 +69,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
     }
 
-    // Aggiunta di una nuova task
+    // Aggiunta di una nuova Task
     public int addTask(Task t) {
         // Ottenimento del repository dei dati in modalità di scrittura
         SQLiteDatabase db = this.getWritableDatabase();
@@ -86,12 +86,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.insert(TasksContract.TABLE_NAME, null, values);
         db.close();
 
-        Log.d("Errore", "La task inserita è " + t.getContent());
-
         return getHighestID();
     }
 
-    // Aggiunta di un nuovo progetto
+    // Aggiunta di un nuovo Project
     public int addProject(Project p) {
         // Ottenimento del repository dei dati in modalità di scrittura
         SQLiteDatabase db = this.getWritableDatabase();
@@ -100,6 +98,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(ProjectsContract.NOME, p.getNome());
         values.put(ProjectsContract.COLORE, p.getColore());
+        values.put(ProjectsContract.ID_PARENT, p.getIdParent());
+        values.put(ProjectsContract.FAVORITE, p.isFavorite() ? 1 : 0);
         values.put(ProjectsContract.EMAIL_UTENTE, p.getEmail());
 
         // Viene inserita la nuova riga
@@ -139,7 +139,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             try { u.setLastAccess(new SimpleDateFormat("yyyy-MM-dd").parse(cursor.getString(6))); }
             catch (ParseException e) { e.printStackTrace(); }
 
-            return u;
+            return u;   // Ritorno dello User presente nel Database
         }
     }
 
@@ -169,20 +169,20 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             Task t = new Task();
             for(int i = 0; i < cursor.getCount() * NUM_FIELDS; i++) {
                 switch (i % NUM_FIELDS) {
-                    case 0:
-                    t = new Task();
+                    case 0:     // ID
+                    t = new Task(); // Creazione di una nuova Task
                     t.setIdTask(cursor.getInt(i % NUM_FIELDS));
                     break;
 
-                    case 1:
+                    case 1:     // Contenuto
                     t.setContent(cursor.getString(i % NUM_FIELDS));
                     break;
 
-                    case 2:
+                    case 2:     // Priorità
                     t.setPriority(cursor.getInt(i % NUM_FIELDS));
                     break;
 
-                    case 3:
+                    case 3:     // Due date
                     try {
                         t.setDueDate(new SimpleDateFormat("yyyy-MM-dd").parse(cursor.getString(i % NUM_FIELDS)));
                     } catch (ParseException e) {
@@ -190,29 +190,29 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     }
                     break;
 
-                    case 4:
-                    t.setIdProject(cursor.getInt(i % NUM_FIELDS));
+                    case 4:     // Email
+                    t.setEmail(cursor.getString(i % NUM_FIELDS));
                     break;
 
-                    case 5:
-                    t.setEmail(cursor.getString(i % NUM_FIELDS));
-                    lstTask.add(t);
+                    case 5:     // IDProject
+                    t.setIdProject(cursor.getInt(i % NUM_FIELDS));
+                    lstTask.add(t);     // Aggiunta della Task alla lista
                     cursor.moveToNext();
                     break;
                 }
             }
-            return lstTask;
+            return lstTask; // Ritorno della lista di Task
         }
     }
 
     public ArrayList<Project> getAllUserProjects(String email) {
         // Ottenimento del repository dei dati in modalità di lettura
         SQLiteDatabase db = this.getReadableDatabase();
-        final int NUM_FIELDS = 4;
+        final int NUM_FIELDS = 6;
         ArrayList<Project> lstProject = new ArrayList<>();
 
         // Filtro SELECT per il result set WHERE EMAIL_UTENTE = email;
-        String select = ProjectsContract.EMAIL_UTENTE + "=?";
+        String select = ProjectsContract.EMAIL_UTENTE + "= ?";
         String[] selectArg = { email };
 
         Cursor cursor = db.query(
@@ -231,54 +231,165 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             Project p = new Project();
             for(int i = 0; i < cursor.getCount() * NUM_FIELDS; i++) {
                 switch (i % NUM_FIELDS) {
-                    case 0:
-                        p = new Project();
+                    case 0:     // ID
+                        p = new Project();  // Creazione nuovo progetto
                         p.setIdProject(cursor.getInt(i % NUM_FIELDS));
                         break;
 
-                    case 1:
+                    case 1:     // Nome
                         p.setNome(cursor.getString(i % NUM_FIELDS));
                         break;
 
-                    case 2:
+                    case 2:     // Colore
                         p.setColore(cursor.getInt(i % NUM_FIELDS));
                         break;
 
-                    case 3:
+                    case 3:     // IDParent
+                        p.setIdParent(cursor.getInt(i % NUM_FIELDS));
+                        break;
+
+                    case 4:     // Favorite
+                        p.setFavorite(cursor.getInt(i % NUM_FIELDS) == 1);
+                        break;
+
+                    case 5:     // Email
                         p.setEmail(cursor.getString(i % NUM_FIELDS));
-                        lstProject.add(p);
+                        lstProject.add(p);  // Aggiunta del Project alla lista
                         cursor.moveToNext();
                         break;
                 }
             }
-            return lstProject;
+            return lstProject;  // Ritorno della lista di progetti
         }
+    }
+
+    public void updateUser(User u) {
+        SQLiteDatabase db  = this.getWritableDatabase();
+
+        // Filtro SELECT per il result set WHERE EMAIL_UTENTE = u.getEmail();
+        String select = UsersContract.EMAIL_UTENTE + " = ?";
+
+        // Argomento della clausola WHERE
+        String[] selectionArgs = new String[] { u.getEmail() };
+
+        // Viene creata una nuova mappa dei valori, dove il nome della colonna è la chiave
+        ContentValues values = new ContentValues();
+        values.put(UsersContract.NOME_UTENTE, u.getNome());
+        values.put(UsersContract.EMAIL_UTENTE, u.getEmail());
+        values.put(UsersContract.TEL_UTENTE, u.getTelefono());
+        values.put(UsersContract.PSW_UTENTE, u.getPassword());
+        values.put(UsersContract.COLORE_UTENTE, u.getColore());
+        values.put(UsersContract.TASK_COMPLETATE, u.getTask());
+        values.put(UsersContract.LAST_ACCESS, new SimpleDateFormat("yyyy-MM-dd").format(u.getLastAccess()));
+
+        // Esecuzione dell'aggiornamento
+        db.update(UsersContract.TABLE_NAME, values, select, selectionArgs);
+        db.close();
+    }
+
+    public void updateTask(Task t) {
+        SQLiteDatabase db  = this.getWritableDatabase();
+
+        // Filtro SELECT per il result set WHERE TASK_ID = p.taskID();
+        String select = TasksContract.ID_TASK + " = ?";
+
+        // Argomento della clausola WHERE
+        String[] selectionArgs = new String[] { t.getIdTask() + "" };
+
+        // Viene creata una nuova mappa dei valori, dove il nome della colonna è la chiave
+        ContentValues values = new ContentValues();
+        values.put(TasksContract.CONTENUTO, t.getContent());
+        values.put(TasksContract.PRIORITA, t.getPriority());
+        values.put(TasksContract.DATA, new SimpleDateFormat("yyyy-MM-dd").format(t.getDueDate()));
+        values.put(TasksContract.EMAIL_UTENTE, t.getEmail());
+        values.put(TasksContract.ID_PROGETTO, t.getIdProject());
+
+        Log.d("Errore", "La task aggiornata ha questo id progetto = " + t.getIdProject());
+
+        // Esecuzione dell'aggiornamento
+        db.update(TasksContract.TABLE_NAME, values, select, selectionArgs);
+        db.close();
+    }
+
+    public void updateProject(Project p) {
+        SQLiteDatabase db  = this.getWritableDatabase();
+
+        // Filtro SELECT per il result set WHERE ID_PROGETTO = p.getIdProject();
+        String select = ProjectsContract.ID_PROGETTO + " = ?";
+
+        // Argomento della clausola WHERE
+        String[] selectionArgs = new String[] { p.getIdProject() + "" };
+
+        // Viene creata una nuova mappa dei valori, dove il nome della colonna è la chiave
+        ContentValues values = new ContentValues();
+        values.put(ProjectsContract.NOME, p.getNome());
+        values.put(ProjectsContract.COLORE, p.getColore());
+        values.put(ProjectsContract.ID_PARENT, p.getIdParent());
+        values.put(ProjectsContract.FAVORITE, p.isFavorite() ? 1 : 0);
+        values.put(ProjectsContract.EMAIL_UTENTE, p.getEmail());
+
+        // Esecuzione dell'aggiornamento
+        db.update(ProjectsContract.TABLE_NAME, values, select, selectionArgs);
+        db.close();
     }
 
     public int deleteTasks(List<Integer> deletedTasks) {
         SQLiteDatabase db  = this.getWritableDatabase();
 
-        // Filtro SELECT per il result set WHERE EMAIL_UTENTE = email;
-        String select = TasksContract.ID_TASK + " IN ?";
+        // Filtro SELECT per il result set WHERE ID_TASK IN lista;
+        String select = TasksContract.ID_TASK + " IN ";
 
-        // Specify arguments in placeholder order.
-        String[] selectionArgs = new String[deletedTasks.size()];
-        for(int i = 0; i < deletedTasks.size(); i++)
-            selectionArgs[i] = "" + deletedTasks.get(i);
+        // Argomento della clausola WHERE di tipo IN ("...")
+        boolean after_first_string = false;
+        StringBuffer sb = new StringBuffer("(");
+        for(int s : deletedTasks) {
+            if (after_first_string) {
+                sb.append(",");
+            }
+            after_first_string = true;
+            sb.append("'").append((s+"").replace("'","''")).append("'");
+        }
+        sb.append(")");
 
-
-        // Issue SQL statement.
+        // Esecuzione dell'eliminazione
         int deletedRows = db.delete(TasksContract.TABLE_NAME,
-                select, selectionArgs);
-
+                select + sb.toString(), null);
+        db.close();
         return deletedRows;
     }
 
+    public int deleteProjects(List<Integer> deletedProjects) {
+        SQLiteDatabase db  = this.getWritableDatabase();
+
+        // Filtro SELECT per il result set WHERE ID_PROGETTO IN lista;
+        String select = ProjectsContract.ID_PROGETTO + " IN ";
+
+        // Argomento della clausola WHERE di tipo IN ("...")
+        boolean after_first_string = false;
+        StringBuffer sb = new StringBuffer("(");
+        for(int s : deletedProjects) {
+            if (after_first_string) {
+                sb.append(",");
+            }
+            after_first_string = true;
+            sb.append("'").append((s+"").replace("'","''")).append("'");
+        }
+        sb.append(")");
+
+        // Esecuzione dell'eliminazione
+        int deletedRows = db.delete(ProjectsContract.TABLE_NAME,
+                select + sb.toString(), null);
+        db.close();
+        return deletedRows;
+    }
+
+    // Ritorna l'ultimo ID inserito con formula AUTOINCREMENT
     public int getHighestID() {
         final String MY_QUERY = "SELECT last_insert_rowid()";
         Cursor cur = this.getWritableDatabase().rawQuery(MY_QUERY, null);
         cur.moveToFirst();
         int ID = cur.getInt(0);
+        Log.d("Errore", "L'ultimo id inserito è " + ID);
         cur.close();
         return ID;
     }

@@ -2,11 +2,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:mContext=".TaskListActivity">
+    tools:mContext=".Manageproject">
+
     <item
-        android:id="@+id/action_complete"
-        android:icon="@drawable/check_icon"
+        android:id="@+id/action_edit"
+        android:icon="@drawable/edit"
         android:orderInCategory="100"
+        android:title="@string/modifica"
         app:showAsAction="always" />
 
     <item
