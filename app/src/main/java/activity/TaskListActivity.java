@@ -82,7 +82,7 @@ import receiver.NotificationReceiver;
 
 public class TaskListActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
         DatePickerDialog.OnDateSetListener, SwipeRefreshLayout.OnRefreshListener, TaskAdapter.TaskAdapterListener {
-    public static final int PROJECT_LIST_CHANGED = 0xe110;  // Codice univo per startActivityForResult
+    public static final int PROJECT_LIST_CHANGED = 0xe110;  // Codice univoco per startActivityForResult
     private List<Task> tasks = new ArrayList<>();           // Lista di task
     private List<Task> tempDeleted = new ArrayList<>();     // Lista di task temporaneamente eliminate
     private List<Project> projects = new ArrayList<>();     // Lista di progetti
@@ -98,7 +98,7 @@ public class TaskListActivity extends AppCompatActivity implements NavigationVie
     private NavigationView navigationView;                  // Menu contestuale incapsulato nel DrawerLayout
     private boolean hasChanged = false;                     // Flag booleano di controllo di eventuali modifiche ai campi della addTask
     // Widget grafici per l'inserimento delle task
-    Button btnDateTimePicker;
+    Button btnDateTimePicker, btnProjectSelector;
     EditText editTextTextMultiLine;
     ImageButton btnPriority;
     public static TextView viewType;                        // TextView per la visualizzazione della modalità di visualizzazione delle task
@@ -244,9 +244,9 @@ public class TaskListActivity extends AppCompatActivity implements NavigationVie
                 if(isAdd) {
                     db.addTask(t);      // Aggiunta task
                     updateViewTasks(viewType.getText().toString().toLowerCase());
-                    resetField();       // Pulizia dei campi di inserimento
                     // Reinizializzazione della task t
                     t = new Task(0, null, 4, Calendar.getInstance().getTime(), 1, u.getEmail());
+                    resetField();       // Pulizia dei campi di inserimento
                 } else {
                     db.updateTask(t);   // Modifica task
                     updateViewTasks(viewType.getText().toString().toLowerCase());
@@ -311,19 +311,10 @@ public class TaskListActivity extends AppCompatActivity implements NavigationVie
         });
 
         // Inizializzazione del bottone di selezione del progetto di appartenenza della task
-        Button btnProjectSelector = layoutView.findViewById(R.id.btnProjectSelector);
+        btnProjectSelector = layoutView.findViewById(R.id.btnProjectSelector);
         if(defaultTask != null) {
-            // Impostazione del testo del bottone
-            Project defaultP = projects.get(getProjectIdx(t.getIdProject()));
-            btnProjectSelector.setText(defaultP.getNome());
-
-            // Impostazione del colore e della icona del bottone
-            Drawable img = ResourcesCompat.getDrawable(getResources(),
-                    getResources().getIdentifier(t.getIdProject() == 1 ? "drawable_left_project" : "round_background", "drawable", getPackageName()), null);
-
-            img.setColorFilter(defaultP.getColore() == 0 ? getResources().getColor(R.color.colorPrimary) : defaultP.getColore(), PorterDuff.Mode.SRC_ATOP);
-            img.setBounds(0, 0, 60, 60);
-            btnProjectSelector.setCompoundDrawables(img, null, null, null);
+            // Impostazione del testo, del colore e della icona del bottone
+            setBtnProjectSelector();
         }
         btnProjectSelector.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -345,18 +336,11 @@ public class TaskListActivity extends AppCompatActivity implements NavigationVie
                         // Aggiornamento flag di modifica
                         hasChanged = hasChanged ? hasChanged : t.getIdProject() != p.getIdProject();
 
-                        // Impostazione del testo del bottone
-                        btnProjectSelector.setText(p.getNome());
-                        // Impostazione del colore e della icona del bottone
-                        Drawable img = ResourcesCompat.getDrawable(getResources(),
-                                getResources().getIdentifier(p.getIdProject() == 1 ? "drawable_left_project" : "round_background", "drawable", getPackageName()), null);
-
-                        img.setColorFilter(p.getColore() == 0 ? getResources().getColor(R.color.colorPrimary) : p.getColore(), PorterDuff.Mode.SRC_ATOP);
-                        img.setBounds(0, 0, 60, 60);
-                        btnProjectSelector.setCompoundDrawables(img, null, null, null);
-
                         // Memorizzazione dell'ID del progetto scelto
                         t.setIdProject(p.getIdProject());
+
+                        // Impostazione del testo, del colore e della icona del bottone
+                        setBtnProjectSelector();
                         alert.dismiss();    // Dismiss del Dialog
                     }
                 });
@@ -511,7 +495,23 @@ public class TaskListActivity extends AppCompatActivity implements NavigationVie
         editTextTextMultiLine.setText("");
         btnDateTimePicker.setText("Oggi");
         changeDrawableColor(btnPriority, R.color.white);
+        setBtnProjectSelector();
         hasChanged = false;
+    }
+
+    // Impostazione del bottone di selezione progetto
+    public void setBtnProjectSelector() {
+        // Impostazione del testo del bottone
+        Project defaultP = projects.get(getProjectIdx(t.getIdProject()));
+        btnProjectSelector.setText(defaultP.getNome());
+
+        // Impostazione del colore e della icona del bottone
+        Drawable img = ResourcesCompat.getDrawable(getResources(),
+                getResources().getIdentifier(t.getIdProject() == 1 ? "drawable_left_project" : "round_background", "drawable", getPackageName()), null);
+
+        img.setColorFilter(defaultP.getColore() == 0 ? getResources().getColor(R.color.colorPrimary) : defaultP.getColore(), PorterDuff.Mode.SRC_ATOP);
+        img.setBounds(0, 0, 60, 60);
+        btnProjectSelector.setCompoundDrawables(img, null, null, null);
     }
 
     // Cambiamento del colore del bottone di priorità
@@ -543,12 +543,14 @@ public class TaskListActivity extends AppCompatActivity implements NavigationVie
         }
         else {
             // Viene visualizzato un messaggio per indicare l'assenza di task
-            fragmentContainer.setVisibility(View.VISIBLE);
-            getSupportFragmentManager().beginTransaction()
-            .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right)
-            .replace(R.id.fragment_container, new NoTaskFragment())
-            .addToBackStack(null)
-            .commit();
+            if(fragmentContainer.getVisibility() != View.VISIBLE) {
+                fragmentContainer.setVisibility(View.VISIBLE);
+                getSupportFragmentManager().beginTransaction()
+                        .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right)
+                        .replace(R.id.fragment_container, new NoTaskFragment())
+                        .addToBackStack(null)
+                        .commit();
+            }
         }
         mAdapter.notifyDataSetChanged();
     }
@@ -744,6 +746,7 @@ public class TaskListActivity extends AppCompatActivity implements NavigationVie
                 break;
 
                 default:    // Rimozione delle task che non appartengono al progetto selezionato
+                if(idx == 0 && !viewType.getText().toString().equalsIgnoreCase("inbox")) viewType.setText("Inbox");
                 if(t.getIdProject() != projects.get(idx).getIdProject())
                     mAdapter.removeData(tasks.indexOf(t));
                 break;
@@ -762,12 +765,14 @@ public class TaskListActivity extends AppCompatActivity implements NavigationVie
         mAdapter.notifyDataSetChanged();
         if(mAdapter.getItemCount() == 0) {
             // Visualizzazione del messaggio che comunica l'assenza di task
-            fragmentContainer.setVisibility(View.VISIBLE);
-            getSupportFragmentManager().beginTransaction()
-                    .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right)
-                    .replace(R.id.fragment_container, new NoTaskFragment())
-                    .addToBackStack(null)
-                    .commit();
+            if(fragmentContainer.getVisibility() != View.VISIBLE) {
+                fragmentContainer.setVisibility(View.VISIBLE);
+                getSupportFragmentManager().beginTransaction()
+                        .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right)
+                        .replace(R.id.fragment_container, new NoTaskFragment())
+                        .addToBackStack(null)
+                        .commit();
+            }
         }
         else fragmentContainer.setVisibility(View.GONE);    // Il FrameLayout di visualizzazione viene nascosto
     }
@@ -866,6 +871,7 @@ public class TaskListActivity extends AppCompatActivity implements NavigationVie
 
         @Override
         public void onDrawerOpened(@NonNull View drawerView) {
+            onResume();
             // Se il Navigation Drawer è aperto
             if (drawerLayout != null && drawerLayout.isDrawerOpen(GravityCompat.START)) {
                 // Ottenimento referenze oggetti grafici
@@ -946,8 +952,8 @@ public class TaskListActivity extends AppCompatActivity implements NavigationVie
     @Override
     protected void onResume() {
         super.onResume();
-        Log.d("Errore", "L'utente si chiama " + u.getEmail());
         getProjects();
+        updateViewTasks(viewType.getText().toString().toLowerCase());
         if(drawerLayout.isDrawerOpen(GravityCompat.START)) {
             // Aggiornamento dell'utente e del Navigation Drawer
             u = db.getUser(u.getEmail(), u.getPassword());
@@ -966,7 +972,6 @@ public class TaskListActivity extends AppCompatActivity implements NavigationVie
             }
         }
     }
-
 
     class ActionModeCallback implements ActionMode.Callback {
 
@@ -995,7 +1000,11 @@ public class TaskListActivity extends AppCompatActivity implements NavigationVie
                         deleteTasks();
                         mode.finish();
                         // Messaggio task completata
-                        Snackbar snackBar = Snackbar.make(findViewById(R.id.fab), tempDeleted.size() + " task sono state completate.", Snackbar.LENGTH_LONG);
+                        Snackbar snackBar;
+                        if(tempDeleted.size() == 1)
+                            snackBar = Snackbar.make(findViewById(R.id.fab), tempDeleted.size() + " task è stata completata.", Snackbar.LENGTH_LONG);
+                        else
+                            snackBar = Snackbar.make(findViewById(R.id.fab), tempDeleted.size() + " task sono state completate.", Snackbar.LENGTH_LONG);
                         snackBar.setAction("ANNULLA", new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
@@ -1032,7 +1041,11 @@ public class TaskListActivity extends AppCompatActivity implements NavigationVie
                         deleteTasks();
                         mode.finish();
                         // Messaggio task eliminate
-                        Snackbar snackBar = Snackbar.make(findViewById(R.id.fab), tempDeleted.size() + " task sono state eliminate.", Snackbar.LENGTH_LONG);
+                        Snackbar snackBar;
+                        if(tempDeleted.size() == 1)
+                            snackBar = Snackbar.make(findViewById(R.id.fab), tempDeleted.size() + " task è stata eliminata.", Snackbar.LENGTH_LONG);
+                        else
+                            snackBar = Snackbar.make(findViewById(R.id.fab), tempDeleted.size() + " task sono state eliminate.", Snackbar.LENGTH_LONG);
                         snackBar.setAction("ANNULLA", new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
@@ -1091,12 +1104,14 @@ public class TaskListActivity extends AppCompatActivity implements NavigationVie
         mAdapter.notifyDataSetChanged();
         if(mAdapter.getItemCount() == 0) {
             // Viene visualizzato un messaggio per indicare l'assenza di task
-            fragmentContainer.setVisibility(View.VISIBLE);
-            getSupportFragmentManager().beginTransaction()
-                    .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right)
-                    .replace(R.id.fragment_container, new NoTaskFragment())
-                    .addToBackStack(null)
-                    .commit();
+            if(fragmentContainer.getVisibility() != View.VISIBLE) {
+                fragmentContainer.setVisibility(View.VISIBLE);
+                getSupportFragmentManager().beginTransaction()
+                        .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right)
+                        .replace(R.id.fragment_container, new NoTaskFragment())
+                        .addToBackStack(null)
+                        .commit();
+            }
         } else fragmentContainer.setVisibility(View.GONE);  // Il FrameLayout di visualizzazione viene nascosto
     }
 

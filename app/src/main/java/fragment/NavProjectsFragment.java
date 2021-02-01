@@ -77,7 +77,9 @@ public class NavProjectsFragment extends Fragment {
                 TaskListActivity.viewType.setText(p.getNome()); // Aggiornamento della modalità di visualizzazione
                 tasks.clear();  // Pulizia lista di task
                 // Aggiunta delle task dal database
-                tasks.addAll(new DatabaseHelper(getContext()).getAllUserTasks(u.getEmail()));
+                ArrayList<Task> tempTasks = new DatabaseHelper(getContext()).getAllUserTasks(u.getEmail());
+                if(tempTasks != null)
+                    tasks.addAll(tempTasks);
                 // Visualizzazione delle task e chiusura del Navigation Drawer
                 updateProjectTask(p.getIdProject());
                 if(TaskListActivity.drawerLayout.isDrawerOpen(GravityCompat.START))
@@ -138,12 +140,14 @@ public class NavProjectsFragment extends Fragment {
 
         if(mAdapter.getItemCount() == 0) {
             // Visualizzazione del messaggio che comunica l'assenza di task
-            fragmentContainer.setVisibility(View.VISIBLE);
-            getActivity().getSupportFragmentManager().beginTransaction()
-                    .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right)
-                    .replace(R.id.fragment_container, new NoTaskFragment())
-                    .addToBackStack(null)
-                    .commit();
+            if(fragmentContainer.getVisibility() != View.VISIBLE) {
+                fragmentContainer.setVisibility(View.VISIBLE);
+                getActivity().getSupportFragmentManager().beginTransaction()
+                        .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right)
+                        .replace(R.id.fragment_container, new NoTaskFragment())
+                        .addToBackStack(null)
+                        .commit();
+            }
         } else fragmentContainer.setVisibility(View.GONE);  // Il FrameLayout di visualizzazione viene nascosto
     }
 }

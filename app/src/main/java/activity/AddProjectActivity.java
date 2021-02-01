@@ -73,6 +73,10 @@ public class AddProjectActivity extends AppCompatActivity {
         TextView activityMode = toolbar.findViewById(R.id.addProject);
         activityMode.setText(mode);
 
+        // Inizializzazione ed istanza del bottone di invio
+        ImageButton btnSend = toolbar.findViewById(R.id.btnSend);
+        btnSend.setEnabled(enableAdd);
+
         // Inizializzazione ed istanza della EditText del nome del progetto
         EditText editText = findViewById(R.id.edit_text);
         TextView countLetters = findViewById(R.id.countLetters);
@@ -92,7 +96,8 @@ public class AddProjectActivity extends AppCompatActivity {
             public void afterTextChanged(Editable s) {
                 // Controllo dell'abilitazione del bottone Send
                 countLetters.setText(editText.getText().toString().length() + "/" + NUM_MAX_LETTERS);
-                enableAdd = editText.getText().toString().length() < NUM_MAX_LETTERS;
+                enableAdd = editText.getText().toString().length() < NUM_MAX_LETTERS && editText.getText().toString().length() > 0;
+                btnSend.setEnabled(enableAdd);
 
                 // Colorazione del countLetters a seconda del numero di caratteri
                 if(!enableAdd)
@@ -221,7 +226,6 @@ public class AddProjectActivity extends AppCompatActivity {
             }
         });
 
-        ImageButton btnSend = toolbar.findViewById(R.id.btnSend);
         // Gestione dell'invio del progetto
         btnSend.setOnClickListener(new View.OnClickListener() {
             @Override

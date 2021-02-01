@@ -212,7 +212,12 @@ public class ManageProjectActivity extends AppCompatActivity implements ProjectA
                 deleteProjects();
                 mode.finish();
                 // Messaggio progetti eliminati
-                Snackbar snackBar = Snackbar.make(findViewById(R.id.recycler_view), tempDeletedProjects.size() + " progetti sono stati eliminati.", Snackbar.LENGTH_LONG);
+                Snackbar snackBar;
+                Log.d("Errore", "Ho creato la snackbar");
+                if(tempDeletedProjects.size() == 1)
+                    snackBar = Snackbar.make(findViewById(R.id.recycler_view), tempDeletedProjects.size() + " progetto è stato eliminato.", Snackbar.LENGTH_LONG);
+                else
+                    snackBar = Snackbar.make(findViewById(R.id.recycler_view), tempDeletedProjects.size() + " progetti sono stati eliminati.", Snackbar.LENGTH_LONG);
                 snackBar.setAction("ANNULLA", new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -273,7 +278,6 @@ public class ManageProjectActivity extends AppCompatActivity implements ProjectA
             // Aggiunta dei progetti da eliminare in una lista temporanea e rimozione degli stessi
             tempDeletedProjects.add(projects.get(selectedItemPositions.get(i)));
             mAdapter.removeData(selectedItemPositions.get(i));
-            Log.d("Errore", "Ho rimosso " + tempDeletedProjects.get(selectedItemPositions.get(i)).getNome());
         }
         mAdapter.notifyDataSetChanged();
     }
